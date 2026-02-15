@@ -34,7 +34,7 @@ std::string get_current_os() {
 }
 
 std::string normalize_backend_name(const std::string& recipe, const std::string& backend) {
-    if (recipe == "llamacpp" && backend == "rocm") {
+    if ((recipe == "llamacpp" || recipe == "sd-cpp") && backend == "rocm") {
         // Map "rocm" to the appropriate channel based on config
         std::string channel = "preview";  // default to preview for now
         if (auto* cfg = RuntimeConfig::global()) {
@@ -50,11 +50,23 @@ std::string get_backend_runtime_version(const json& backend_versions,
                                         const std::string& backend_type) {
     const std::string runtime_key = backend_type + "-runtime";
 
+    if (backend_versions.contains(runtime_key) &&
+        backend_versions[runtime_key].is_string()) {
+        return backend_versions[runtime_key].get<std::string>();
+    }
+
     if (backend_versions.contains(recipe) &&
         backend_versions[recipe].is_object() &&
         backend_versions[recipe].contains(runtime_key) &&
         backend_versions[recipe][runtime_key].is_string()) {
         return backend_versions[recipe][runtime_key].get<std::string>();
+    }
+
+    if (backend_versions.contains("llamacpp") &&
+        backend_versions["llamacpp"].is_object() &&
+        backend_versions["llamacpp"].contains(runtime_key) &&
+        backend_versions["llamacpp"][runtime_key].is_string()) {
+        return backend_versions["llamacpp"][runtime_key].get<std::string>();
     }
 
     throw std::runtime_error("backend_versions.json is missing runtime version for: " + recipe + ":" + runtime_key);
@@ -339,7 +351,7 @@ void BackendManager::install_backend(const std::string& recipe, const std::strin
     backends::BackendUtils::install_from_github(
         *spec, params.version, params.repo, params.filename, resolved_backend, progress_cb);
 
-    if (recipe == "llamacpp" && resolved_backend == "rocm-stable") {
+    if ((recipe == "llamacpp" || recipe == "sd-cpp") && resolved_backend == "rocm-stable") {
         install_rocm_stable_runtime_if_needed(get_current_os(), *spec, backend_versions_, progress_cb);
     }
 }
