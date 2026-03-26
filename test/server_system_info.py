@@ -282,7 +282,11 @@ MOCK_HARDWARE_CONFIGS = {
             "sd-cpp": ["cpu"],
         },
         "expected_unsupported": {
-            "llamacpp": ["metal", "rocm"],  # rocm not supported on RDNA2
+            "llamacpp": [
+                "metal",
+                "rocm-stable",
+                "rocm-preview",
+            ],  # rocm backends not supported on RDNA2
             "whispercpp": ["npu"],  # npu backend requires XDNA2 NPU
             # NPU recipes unsupported: CPU is "Ryzen 7 6800U" (no Ryzen AI)
             "sd-cpp": ["rocm"],
@@ -456,7 +460,11 @@ MOCK_HARDWARE_CONFIGS = {
             ],  # whispercpp CPU + Vulkan supported on Linux
         },
         "expected_unsupported": {
-            "llamacpp": ["metal", "rocm"],  # rocm not supported on RDNA2
+            "llamacpp": [
+                "metal",
+                "rocm-stable",
+                "rocm-preview",
+            ],  # rocm backends not supported on RDNA2
             "whispercpp": [
                 "npu"
             ],  # NPU is Windows-only; CPU and Vulkan supported on Linux

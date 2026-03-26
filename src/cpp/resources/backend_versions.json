@@ -3,6 +3,9 @@
   "llamacpp": {
     "vulkan": "b8653",
     "rocm": "b1229",
+    "rocm-stable": "b8653",
+    "rocm-preview": "b1228",
+    "rocm-stable-runtime": "v7.2.1",
     "metal": "b8460",
     "cpu": "b8653"
   },
