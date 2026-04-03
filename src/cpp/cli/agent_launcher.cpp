@@ -80,17 +80,6 @@ void add_windows_npm_fallbacks(std::vector<std::string>& fallback_paths,
 #endif
 }
 
-std::string normalize_server_host(const std::string& host) {
-    if (host.empty() || host == "0.0.0.0" || host == "::" || host == "[::]" || host == "*") {
-        return "localhost";
-    }
-    return host;
-}
-
-std::string build_server_base_url(const std::string& host, int port) {
-    return "http://" + normalize_server_host(host) + ":" + std::to_string(port);
-}
-
 void configure_claude_agent(const std::string& base_url,
                             const std::string& model,
                             const std::string& api_key,
@@ -194,6 +183,13 @@ void configure_opencode_agent(const std::string& model,
 
 } // namespace
 
+std::string build_agent_server_base_url(const std::string& host, int port) {
+    if (host.empty() || host == "0.0.0.0" || host == "::" || host == "[::]" || host == "*") {
+        return "http://localhost:" + std::to_string(port);
+    }
+    return "http://" + host + ":" + std::to_string(port);
+}
+
 bool agent_needs_config_sync(const std::string& agent) {
     return agent == "opencode";
 }
@@ -205,7 +201,7 @@ bool build_agent_config(const std::string& agent,
                         const std::string& api_key,
                         AgentConfig& config,
                         std::string& error_message) {
-    const std::string base = build_server_base_url(host, port);
+    const std::string base = build_agent_server_base_url(host, port);
 
     if (agent == "claude") {
         configure_claude_agent(base, model, api_key, config);
