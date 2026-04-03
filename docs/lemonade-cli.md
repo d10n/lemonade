@@ -447,7 +447,7 @@ lemonade launch AGENT [--model MODEL_NAME] [options]
 
 | Option/Argument | Description | Required |
 |-----------------|-------------|----------|
-| `AGENT` | Agent name to launch. Supported agents: `claude`, `codex` | Yes |
+| `AGENT` | Agent name to launch. Supported agents: `claude`, `codex`, `opencode` | Yes |
 | `--model MODEL_NAME` | Model name to launch with. If omitted, you will be prompted to select one. | No |
 | `--directory DIR` | Remote recipes directory used only if you choose recipe import at prompt | No |
 | `--recipe-file FILE` | Remote recipe JSON filename used only if you choose recipe import at prompt | No |
@@ -461,7 +461,9 @@ lemonade launch AGENT [--model MODEL_NAME] [options]
 - `--directory` and `--recipe-file` are only used for remote recipe import at prompt time.
 - For local recipe files, run `lemonade import <LOCAL_RECIPE_JSON>` first, then launch with the imported model id.
 - `--api-key` is propagated to the launched agent process.
-- Supported agents: `claude`, `codex`
+- Supported agents: `claude`, `codex`, `opencode`
+- `opencode` uses an auto-managed config file at `~/.config/opencode/opencode.json`.
+- When no `--api-key` is provided, the generated opencode provider uses a default `apiKey` value of `lemonade`.
 
 **Examples:**
 
